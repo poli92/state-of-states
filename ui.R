@@ -5,16 +5,25 @@
 # http://shiny.rstudio.com
 #
 
-library(shiny)
+library(shinydashboard)
 
-shinyUI(fluidPage(
-
+header <- dashboardHeader(
   # Application title
-  titlePanel("US State Employment Data"),
+  title = "US State Employment Data"
+)
 
-    # Show a plot of the generated distribution
-    mainPanel(
-      leafletOutput('myMap')
+body <- dashboardBody(
+  fluidRow(
+    column(width = 9,
+           box(width = NULL, solidHeader = TRUE,
+               leafletOutput("myMap", height = 500)
+           )
     )
   )
+)
+
+dashboardPage(
+  header,
+  dashboardSidebar(disable = TRUE),
+  body
 )
