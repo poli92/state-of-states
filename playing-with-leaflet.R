@@ -26,7 +26,7 @@ usatrimmed <- gSimplify(statemaps, tol=0.01, topologyPreserve=TRUE)
 usaspdf <- SpatialPolygonsDataFrame(usatrimmed,data=as.data.frame(statemaps@data))
 
 #read in state emp data
-fulldataset <- read.csv('empdata.csv')
+fulldataset <- read.csv('data/empdata.csv')
 
 #keep only the stwd total nonfarm estimate for april 
 StateKey <- 1
