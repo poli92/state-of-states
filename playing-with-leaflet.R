@@ -12,6 +12,9 @@ library(stringr)
 #read in state emp data
 fulldataset <- read.csv('data/empdata.csv')
 
+#Use only supersectors for the time being 
+fulldataset <- filter(fulldataset, substr(seriesID,13,14) == '00')
+
 #ensure that there is no residual statemaps object in environment
 rm(statemaps)
 
