@@ -29,7 +29,6 @@ usaspdf <- SpatialPolygonsDataFrame(usatrimmed,data=as.data.frame(statemaps@data
 fulldataset <- read.csv('data/empdata.csv')
 
 #keep only the stwd total nonfarm estimate for april 
-StateKey <- 1
 AreaKey <- "Statewide"
 IndustryKey <- "Total Nonfarm"
 YearKey <- 2017
@@ -45,23 +44,28 @@ SubTable <- mutate(SubTable, STFips = str_pad(as.character(STFips), 2, pad = "0"
 #Join the spatial data with the economic data
 EmpDataMerged <- geo_join(usaspdf,SubTable,"STATEFP","STFips")
 
-#Specify the color and number of quantiles
-pal <- colorQuantile("Greens",NULL, n=6)
+#Specify the color based on the data value
+pal <- colorNumeric("Greens",EmpDataMerged$value)
 
 #create a pop-up that states the industry and the the employment value
 popup <- paste(
                "<b>", EmpDataMerged@data$NAME, "</b><br/>",
-               EmpDataMerged$Industry,"(in thousands): ", as.character(EmpDataMerged$value)
+               EmpDataMerged$Datatype,": ", as.character(EmpDataMerged$value)
 )
 
 #Create the leaflet widget 
-mymap <-leaflet() %>%
-  addTiles() %>%
-    addPolygons(data = EmpDataMerged, 
-                fillColor = ~pal(EmpDataMerged$value), 
-                fillOpacity = 0.7, 
-                weight = 0.2, 
-                popup = popup)
+mymap <-leaflet(EmpDataMerged) %>%
+  setView(lng = -103.0589, lat = 42.3601, zoom = 2) %>%
+    addTiles() %>%
+      addPolygons(data = EmpDataMerged, 
+                  fillColor = ~pal(EmpDataMerged$value), 
+                  fillOpacity = 0.7, 
+                  weight = 0.2, 
+                  popup = popup) %>%
+        addLegend(pal = pal, 
+                  values = ~EmpDataMerged$value, 
+                  position = "bottomright", 
+                  title = EmpDataMerged$Industry[1])
 
 mymap
 
