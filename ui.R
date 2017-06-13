@@ -18,7 +18,13 @@ body <- dashboardBody(
            box(width = NULL, solidHeader = TRUE,
                leafletOutput("myMap", height = 500)
            )
-    )
+    ),
+
+    column(width = 3,
+           box(width = NULL, status = "warning",
+               uiOutput("seriesSelect")
+               )
+           )
   )
 )
 

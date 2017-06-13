@@ -8,12 +8,24 @@ library(raster)
 library(sp)
 library(rgeos)
 library(stringr)
+library(magrittr)
 
 #read in state emp data
 fulldataset <- read.csv('data/empdata.csv')
 
 #Use only supersectors for the time being 
-fulldataset <- filter(fulldataset, substr(seriesID,13,14) == '00')
+fulldataset <- filter(fulldataset, substr(seriesID,13,18) == '000000')
+
+#Create an actual series code 
+fulldataset <- mutate(fulldataset, SeriesCode = substr(seriesID,11,18))
+
+#Turn STFips into a character with leading 0s where applicable 
+fulldataset <- mutate(fulldataset, STFips = str_pad(as.character(STFips), 2, pad = "0"))
+
+#Extract just an ordered list of series codes and names 
+SeriesCodes <- unique(fulldataset[c("SeriesCode","Industry")])
+
+SeriesCodes <- SeriesCodes[with(SeriesCodes, order(SeriesCode, Industry)), ]
 
 #ensure that there is no residual statemaps object in environment
 rm(statemaps)
@@ -40,9 +52,6 @@ MethodKey <- "Seasonally Adjusted"
 
 #Subset the input dataset using the specified filters
 SubTable <- filter(fulldataset, Area == AreaKey & Industry == IndustryKey & year == YearKey & period == PeriodKey & Adjustment.Method == MethodKey)
-
-#Turn STFips into a character with leading 0s where applicable 
-SubTable <- mutate(SubTable, STFips = str_pad(as.character(STFips), 2, pad = "0"))
 
 #Join the spatial data with the economic data
 EmpDataMerged <- geo_join(usaspdf,SubTable,"STATEFP","STFips")
