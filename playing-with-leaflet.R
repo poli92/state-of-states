@@ -67,6 +67,7 @@ mymap <-leaflet(EmpDataMerged) %>%
                   position = "bottomright", 
                   title = paste(EmpDataMerged$Industry[1], "<br/>(in thousands)"))
 
+
 mymap
 
 #saveWidget(mymap, file="mymap.html")
