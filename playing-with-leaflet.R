@@ -9,10 +9,15 @@ library(sp)
 library(rgeos)
 library(stringr)
 
-states()
+#ensure that there is no residual statemaps object in environment
+rm(statemaps)
 
-#Create a SPDF for all states
-statemaps <- states()
+#Try to run the states() function until it is successful 
+#Connectivity errors sometime occur 
+while (exists('statemaps') == FALSE){
+  #Create a SPDF for all states
+  statemaps <- try(states())
+}
 
 #Reduce number of vertices to increase plotting efficiency
 usatrimmed <- gSimplify(statemaps, tol=0.01, topologyPreserve=TRUE)
@@ -22,8 +27,6 @@ usaspdf <- SpatialPolygonsDataFrame(usatrimmed,data=as.data.frame(statemaps@data
 
 #read in state emp data
 fulldataset <- read.csv('empdata.csv')
-
-
 
 #keep only the stwd total nonfarm estimate for april 
 StateKey <- 1
