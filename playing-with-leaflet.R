@@ -9,6 +9,9 @@ library(sp)
 library(rgeos)
 library(stringr)
 
+#read in state emp data
+fulldataset <- read.csv('data/empdata.csv')
+
 #ensure that there is no residual statemaps object in environment
 rm(statemaps)
 
@@ -20,13 +23,10 @@ while (exists('statemaps') == FALSE){
 }
 
 #Reduce number of vertices to increase plotting efficiency
-usatrimmed <- gSimplify(statemaps, tol=0.01, topologyPreserve=TRUE)
+usatrimmed <- gSimplify(statemaps, tol=.1, topologyPreserve=TRUE)
 
 #Re-attach the data from the original SPDF
 usaspdf <- SpatialPolygonsDataFrame(usatrimmed,data=as.data.frame(statemaps@data))
-
-#read in state emp data
-fulldataset <- read.csv('data/empdata.csv')
 
 #keep only the stwd total nonfarm estimate for april 
 AreaKey <- "Statewide"
