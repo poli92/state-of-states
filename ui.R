@@ -6,6 +6,23 @@
 #
 
 library(shinydashboard)
+library(shiny)
+library(leaflet)
+library(maps)
+library(tigris)
+library(dplyr)
+library(htmlwidgets)
+library(rgdal)
+library(raster)
+library(sp)
+library(rgeos)
+library(stringr)
+library(magrittr)
+
+source("helper.R")
+
+series <- as.character(SeriesCodes$Industry)
+names(series) <- as.character(SeriesCodes$Industry)
 
 header <- dashboardHeader(
   # Application title
@@ -22,7 +39,12 @@ body <- dashboardBody(
 
     column(width = 3,
            box(width = NULL, status = "warning",
-               uiOutput("seriesSelect")
+               ###############################################################################
+               #  Add a dropdown box for selecting which series to display
+               ############################################################################### 
+               selectInput(
+                 "series", "Industry", choices = series, selected = series[1]
+               ) 
                )
            )
   )

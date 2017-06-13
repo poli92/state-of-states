@@ -68,7 +68,9 @@ popup <- paste(
 #Create the leaflet widget 
 mymap <-leaflet(EmpDataMerged) %>%
   setView(lng = -103.0589, lat = 42.3601, zoom = 2) %>%
-    addTiles() %>%
+    addTiles(urlTemplate = "//{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png",
+             attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>'
+                     ) %>%
       addPolygons(data = EmpDataMerged, 
                   fillColor = ~pal(EmpDataMerged$value), 
                   fillOpacity = 0.7, 
