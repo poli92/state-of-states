@@ -7,7 +7,7 @@ This application requires a registered API key from the BLS, which can be reques
 The application is still very much in development and should not be considered stable or functional. 
 
 The programs must be run in the following order: 
-scrape-series-id.R
-bls-api-pull.R
-playing-with-leaflet.R
-Then run the app from ui.R or server.R
+-> scrape-series-id.R
+-> bls-api-pull.R
+-> playing-with-leaflet.R
+-> Then run the app from ui.R or server.R
