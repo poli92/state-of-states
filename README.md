@@ -9,5 +9,4 @@ The application is still very much in development and should not be considered s
 The programs must be run in the following order: 
 -> scrape-series-id.R
 -> bls-api-pull.R
--> playing-with-leaflet.R
 -> Then run the app from ui.R or server.R
