@@ -27,9 +27,6 @@ SeriesCodes <- unique(fulldataset[c("SeriesCode","Industry")])
 
 SeriesCodes <- SeriesCodes[with(SeriesCodes, order(SeriesCode, Industry)), ]
 
-#ensure that there is no residual statemaps object in environment
-rm(statemaps)
-
 #Try to run the states() function until it is successful 
 #Connectivity errors sometime occur 
 while (exists('statemaps') == FALSE){

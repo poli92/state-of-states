@@ -19,6 +19,9 @@ library(rgeos)
 library(stringr)
 library(magrittr)
 
+#ensure that there are no residual objects in environment
+rm(list=ls())
+
 source("helper.R")
 
 series <- as.character(SeriesCodes$Industry)
