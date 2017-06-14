@@ -62,9 +62,7 @@ body <- dashboardBody(
                ###############################################################################
                #  Add a dropdown box for selecting which month to display
                ############################################################################### 
-               selectInput(
-                 "month", "Month", choices = monthlist, selected = monthlist[1]
-               ),
+               uiOutput('chooseMonth'),
                p(
                  class = "text-muted",
                  "Source: US Bureau of Labor Statistics API"

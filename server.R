@@ -22,16 +22,19 @@ library(magrittr)
 
 shinyServer(function(input, output) {
   
+  output$chooseMonth <- renderUI({
+    monthlist <- as.character(unique(subset(filter(fulldataset, year == as.numeric(input$year)), select = "periodName")$periodName))
+    selectInput(
+      "month", "Month", choices = monthlist, selected = monthlist[1]
+    )  
+  })
 
-  
 ###############################################################################
 #  Generate the Leaflet widget
 ###############################################################################   
   output$myMap <- renderLeaflet({
+    
 
-    monthlist <- reactive({
-      as.character(unique(subset(filter(fulldataset, year == as.numeric(input$year)), select = "periodName")$periodName))
-    })
     
     #keep only the stwd total nonfarm estimate for april
     AreaKey <- "Statewide"
