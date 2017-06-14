@@ -43,6 +43,8 @@ shinyServer(function(input, output) {
     #Join the spatial data with the economic data
     EmpDataMerged <- geo_join(usaspdf,SubTable,"STATEFP","STFips")
     
+    EmpDataMerged@data <- filter(EmpDataMerged@data, !(NAME %in% c('American Samoa','Guam','Commonwealth of the Northern Mariana Islands')))
+    
     #Specify the color based on the data value
     pal <- colorNumeric("Greens",EmpDataMerged$value)
     
@@ -58,9 +60,17 @@ shinyServer(function(input, output) {
       paste(strwrap(x, ...), collapse = "<br>")
     }
     
+    #Create a datatable
+    output$table <- DT::renderDataTable({
+      DT::datatable(
+      data = subset(EmpDataMerged@data, select=c("NAME", "Area","Industry","Datatype","year","periodName","value")),
+      colnames = list('State','Area','Series','Industry','Data Type','Year','Month','Data Value')
+      )
+      })
+    
     #Create the leaflet widget 
     mymap <-leaflet(EmpDataMerged) %>%
-      setView(lng = -103.0589, lat = 42.3601, zoom = 2) %>%
+      setView(lng = -103.0589, lat = 50.3601, zoom = 3) %>%
       addTiles() %>%
       addPolygons(data = EmpDataMerged, 
                   fillColor = ~pal(EmpDataMerged$value), 
@@ -73,6 +83,5 @@ shinyServer(function(input, output) {
                 title = paste(wrapper(EmpDataMerged$Industry[1], width = 20)))
     
   })
-    
 
 })
