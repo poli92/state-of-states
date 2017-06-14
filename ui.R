@@ -46,12 +46,41 @@ body <- dashboardBody(
                ############################################################################### 
                selectInput(
                  "series", "Industry", choices = series, selected = series[1]
-               ) 
+               ), 
+               ###############################################################################
+               #  Add a dropdown box for selecting which adjustment method to display
+               ############################################################################### 
+               selectInput(
+                 "adjmethod", "Adjustment Method", choices = levels(fulldataset$Adjustment.Method), selected = fulldataset$Adjustment.Method[1]
+               ), 
+               ###############################################################################
+               #  Add a dropdown box for selecting which year to display
+               ############################################################################### 
+               selectInput(
+                 "year", "Year", choices = unique(as.character(fulldataset$year)), selected = fulldataset$year[1]
+               ), 
+               ###############################################################################
+               #  Add a dropdown box for selecting which month to display
+               ############################################################################### 
+               selectInput(
+                 "month", "Month", choices = monthlist, selected = monthlist[1]
+               ),
+               p(
+                 class = "text-muted",
+                 "Source: US Bureau of Labor Statistics API"
+               ),
+               p(
+                 class = "text-muted",
+                  "Disclaimer: BLS.gov cannot vouch for the data or analyses derived from these data after the data have been retrieved from BLS.gov."
+               )
                )
            )
   ),
   fluidRow(
-    DT::dataTableOutput("table")
+    column(
+      DT::dataTableOutput("table"),width = 12
+    )
+    
   )
 )
 

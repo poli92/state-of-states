@@ -22,20 +22,26 @@ library(magrittr)
 
 shinyServer(function(input, output) {
   
+
+  
 ###############################################################################
 #  Generate the Leaflet widget
 ###############################################################################   
   output$myMap <- renderLeaflet({
 
+    monthlist <- reactive({
+      as.character(unique(subset(filter(fulldataset, year == as.numeric(input$year)), select = "periodName")$periodName))
+    })
+    
     #keep only the stwd total nonfarm estimate for april
     AreaKey <- "Statewide"
     IndustryKey <- input$series
-    YearKey <- 2017
-    PeriodKey <- "M04"
-    MethodKey <- "Seasonally Adjusted"
+    YearKey <- as.numeric(input$year)
+    PeriodKey <- input$month
+    MethodKey <- input$adjmethod
     
     #Subset the input dataset using the specified filters
-    SubTable <- filter(fulldataset, Area == AreaKey & Industry == IndustryKey & year == YearKey & period == PeriodKey & Adjustment.Method == MethodKey)
+    SubTable <- filter(fulldataset, Area == AreaKey & Industry == IndustryKey & year == YearKey & periodName == PeriodKey & Adjustment.Method == MethodKey)
     
     #Turn STFips into a character with leading 0s where applicable
     SubTable <- mutate(SubTable, STFips = str_pad(as.character(STFips), 2, pad = "0"))
@@ -63,8 +69,8 @@ shinyServer(function(input, output) {
     #Create a datatable
     output$table <- DT::renderDataTable({
       DT::datatable(
-      data = subset(EmpDataMerged@data, select=c("NAME", "Area","Industry","Datatype","year","periodName","value")),
-      colnames = list('State','Area','Series','Industry','Data Type','Year','Month','Data Value')
+      data = subset(EmpDataMerged@data, select=c("NAME", "Area","Industry","Datatype",'Adjustment.Method',"year","periodName","value")),
+      colnames = list('State','Area','Industry','Data Type',"Adjustment Method",'Year','Month','Data Value')
       )
       })
     
