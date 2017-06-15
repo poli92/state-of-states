@@ -5,40 +5,27 @@
 # http://shiny.rstudio.com
 #
 
-library(shinydashboard)
 library(shiny)
-library(leaflet)
-library(maps)
-library(tigris)
-library(dplyr)
-library(htmlwidgets)
-library(rgdal)
-library(raster)
-library(sp)
-library(rgeos)
-library(stringr)
-library(magrittr)
-
-
+library(shinydashboard)
 
 source("helper.R")
 
-series <- as.character(SeriesCodes$Industry)
-names(series) <- as.character(SeriesCodes$Industry)
-
+# Create dashboard header
 header <- dashboardHeader(
   # Application title
   title = "US State Employment Data"
 )
 
 body <- dashboardBody(
+  
   fluidRow(
-    column(width = 9,
-           box(width = NULL, solidHeader = TRUE,
-               leafletOutput("myMap", height = 500)
-           )
+    column(
+      width = 9,
+      box(width = NULL, solidHeader = TRUE,
+          leafletOutput("myMap", height = 500)
+      )
     ),
-
+    
     column(width = 3,
            box(width = NULL, status = "warning",
                ###############################################################################
@@ -63,27 +50,47 @@ body <- dashboardBody(
                #  Add a dropdown box for selecting which month to display
                ############################################################################### 
                uiOutput('chooseMonth'),
+               
+               br(),
+               
+               actionButton("update", "Load"),
+               
+               br(),
                p(
                  class = "text-muted",
                  "Source: US Bureau of Labor Statistics API"
                ),
                p(
                  class = "text-muted",
-                  "Disclaimer: BLS.gov cannot vouch for the data or analyses derived from these data after the data have been retrieved from BLS.gov."
-               )
+                 "Disclaimer: BLS.gov cannot vouch for the data or analyses derived from these data after the data have been retrieved from BLS.gov."
                )
            )
+    )
+    
   ),
+  ###############################################################################
+  #  Add datatable to display
+  ###############################################################################   
+  
   fluidRow(
     column(
       DT::dataTableOutput("table"),width = 12
     )
     
   )
+  
+  
 )
+
+
+
+
+#Compile the dashboard
 
 dashboardPage(
   header,
   dashboardSidebar(disable = TRUE),
   body
 )
+
+

@@ -1,48 +1,28 @@
-library(leaflet)
-library(maps)
-library(tigris)
-library(dplyr)
-library(htmlwidgets)
-library(rgdal)
-library(raster)
-library(sp)
-library(rgeos)
-library(stringr)
-library(magrittr)
+# This program reads in and wrangles the dataset that provides the backbone of the application 
 
-#ensure that there are no residual objects in environment
+
+
+library(dplyr)
+library(stringr)
+library(rgeos)
+library(tigris)
+library(sp)
+library(rgdal)
+library(leaflet)
+library(DT)
+
 rm(list=ls())
 
 #read in state emp data
-fulldataset <- read.csv('data/empdata.csv')
-
-#Use only supersectors for the time being 
-fulldataset <- filter(fulldataset, substr(seriesID,13,18) == '000000')
-
-#Create an actual series code 
-fulldataset <- mutate(fulldataset, SeriesCode = substr(seriesID,11,18))
-
-#Turn STFips into a character with leading 0s where applicable 
-fulldataset <- mutate(fulldataset, STFips = str_pad(as.character(STFips), 2, pad = "0"))
+fulldataset <- readRDS("data/empdata.Rda")
 
 #Extract just an ordered list of series codes and names 
 SeriesCodes <- unique(fulldataset[c("SeriesCode","Industry")])
 
 SeriesCodes <- SeriesCodes[with(SeriesCodes, order(SeriesCode, Industry)), ]
 
-#Try to run the states() function until it is successful 
-#Connectivity errors sometime occur 
-while (exists('statemaps') == FALSE){
-  #Create a SPDF for all states
-  statemaps <- try(states())
-}
+#Series name list for input selection in UI
+series <- as.character(SeriesCodes$Industry)
 
-#Reduce number of vertices to increase plotting efficiency
-usatrimmed <- gSimplify(statemaps, tol=.1, topologyPreserve=TRUE)
-
-#Re-attach the data from the original SPDF
-usaspdf <- SpatialPolygonsDataFrame(usatrimmed,data=as.data.frame(statemaps@data))
-
-
-
-
+#read in trimmed USA shapefile 
+usaspdf <- readOGR("usaspdf","usaspdf")
