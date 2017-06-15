@@ -22,12 +22,12 @@ body <- dashboardBody(
     column(
       width = 9,
       box(width = NULL, solidHeader = TRUE,
-          leafletOutput("myMap", height = 500)
+          leafletOutput("myMap", height = 470)
       )
     ),
     
     column(width = 3,
-           box(width = NULL, status = "warning",
+           box(width = NULL, status = "warning", height = 490,
                ###############################################################################
                #  Add a dropdown box for selecting which series to display
                ############################################################################### 
@@ -56,6 +56,8 @@ body <- dashboardBody(
                actionButton("update", "Load"),
                
                br(),
+               br(),
+               
                p(
                  class = "text-muted",
                  "Source: US Bureau of Labor Statistics API"
